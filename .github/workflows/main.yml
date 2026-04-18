@@ -15,7 +15,7 @@ jobs:
       
       - name: Create PEM File
         run: |
-          echo "${{ secrets.secret_key }}" > sheela-key.pem
+          echo "${{ secrets.sheelaa_key }}" > sheela-key.pem
           chmod 400 sheela-key.pem
 
       
