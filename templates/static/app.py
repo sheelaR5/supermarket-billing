@@ -23,6 +23,9 @@ def home():
     customer = Customer(1, "Sheela", "9876543210")
     product = Product(1, "Rice", 50)
     bill = Bill(customer, product, 2)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001)
+    
 
     return render_template("index.html", bill=bill)
 
