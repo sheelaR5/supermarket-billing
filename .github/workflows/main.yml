@@ -18,7 +18,7 @@ jobs:
         python-version: "3.10"
 
     - name: Install Dependencies
-      run: pip install -r requirements.txt
+      run: python -m pip if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Run App
       run: echo "Flask App CI Successful"
