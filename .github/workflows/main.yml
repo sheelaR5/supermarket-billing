@@ -15,18 +15,18 @@ jobs:
       
       - name: Create PEM File
         run: |
-          echo "${{ secrets.secret_key }}" > sheela-r.pem
-          chmod 400 sheela-r.pem
+          echo "${{ secrets.secret_key }}" > sheela-key.pem
+          chmod 400 sheela-key.pem
 
       
       - name: Copy Project to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i sheela-r.pem -r * ec2-user@34.201.82.113:/home/ec2-user/supermarket-billing
+          scp -o StrictHostKeyChecking=no -i sheela-key.pem -r * ec2-user@3.93.59.115:/home/ec2-user/supermarket-billing
 
       
       - name: Run Application
         run: |
-          ssh -o StrictHostKeyChecking=no -i sheela-r.pem ec2-user@34.201.82.113 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i sheela-key.pem ec2-user@3.93.59.115 << 'EOF'
             cd /home/ec2-user/supermarket-billing
 
             # Install Python if not exists
