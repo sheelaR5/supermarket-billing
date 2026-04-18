@@ -1,24 +1,29 @@
-name: Python CI Pipeline
+name: EC2 Deploy Pipeline
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
+    
+      - name: get pem file
+        run: |
+          echo "${{ secrets.sheela_key }}" > sheela-r.pem
+          chmod 400 sheela-r.pem
 
-    - name: Install Flask
-      run: pip install flask
+     
+      - name: cp app.py
+        run: |
+          scp -o StrictHostKeyChecking=no -i sheela-r.pem app.py ec2-user@43.204.22.22:/home/ec2-user/
+          scp -o StrictHostKeyChecking=no -i sheela-r.pem requirements.txt ec2-user@43.204.22.22:/home/ec2-user/
 
-    - name: Run App
-      run: echo "Flask App CI Successful"
+  
+      - name: Run application
+        run: |
+          ssh -o StrictHostKeyChecking=no -i sheela-r.pem ec2-user@43.204.22.22 "cd /home/ec2-user && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 app.py" 
