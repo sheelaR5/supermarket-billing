@@ -26,7 +26,7 @@ jobs:
       
       - name: Run Application
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@43.204.22.22 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i sheela-r.pem ec2-user@43.204.22.22 << 'EOF'
             cd /home/ec2-user/supermarket-billing
 
             # Install Python if not exists
