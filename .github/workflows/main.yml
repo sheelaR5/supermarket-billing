@@ -1,29 +1,43 @@
-name: EC2 Deploy Pipeline
+name: Supermarket Billing CI/CD
 
 on:
-  workflow_dispatch
+  push:
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-    
-      - name: get pem file
+      
+      - name: Create PEM File
         run: |
           echo "${{ secrets.sheela_key }}" > sheela-r.pem
           chmod 400 sheela-r.pem
 
-     
-      - name: cp app.py
+      
+      - name: Copy Project to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i sheela-r.pem app.py ec2-user@43.204.22.22:/home/ec2-user/
-          scp -o StrictHostKeyChecking=no -i sheela-r.pem requirements.txt ec2-user@43.204.22.22:/home/ec2-user/
+          scp -o StrictHostKeyChecking=no -i sheela-r.pem -r * ec2-user@43.204.22.22:/home/ec2-user/supermarket-billing
 
-  
-      - name: Run application
+      
+      - name: Run Application
         run: |
-          ssh -o StrictHostKeyChecking=no -i sheela-r.pem ec2-user@43.204.22.22 "cd /home/ec2-user && python3 -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt && python3 app.py" 
+          ssh -o StrictHostKeyChecking=no -i key.pem ec2-user@43.204.22.22 << 'EOF'
+            cd /home/ec2-user/supermarket-billing
+
+            # Install Python if not exists
+            sudo yum install python3 -y
+
+            # Install dependencies
+            pip3 install -r requirements.txt
+
+            # Stop old app if running
+            pkill -f app.py || true
+
+            # Run app in background
+            nohup python3 app.py > output.log 2>&1 &
+          EOF
