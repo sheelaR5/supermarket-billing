@@ -21,12 +21,12 @@ jobs:
       
       - name: Copy Project to EC2
         run: |
-          scp -o StrictHostKeyChecking=no -i sheela-r.pem -r * ec2-user@43.204.22.22:/home/ec2-user/supermarket-billing
+          scp -o StrictHostKeyChecking=no -i sheela-r.pem -r * ec2-user@34.201.82.113:/home/ec2-user/supermarket-billing
 
       
       - name: Run Application
         run: |
-          ssh -o StrictHostKeyChecking=no -i sheela-r.pem ec2-user@43.204.22.22 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i sheela-r.pem ec2-user@34.201.82.113 << 'EOF'
             cd /home/ec2-user/supermarket-billing
 
             # Install Python if not exists
